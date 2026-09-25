@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily To-Do List</title>
+<style>
+    :root {
+      --bg: #eef2ff;
+      --card: rgba(255, 255, 255, 0.96);
+      --text: #172033;
+      --muted: #687086;
+      --border: #dfe4f2;
+      --accent: #7c3aed;
+      --accent-hover: #6d28d9;
+      --danger: #e11d48;
+      --shadow: 0 20px 55px rgba(31, 35, 55, 0.10);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 48px 16px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 5% 5%, rgba(124, 58, 237, 0.18), transparent 32%),
+        radial-gradient(circle at 95% 15%, rgba(14, 165, 233, 0.14), transparent 28%),
+        radial-gradient(circle at 80% 95%, rgba(236, 72, 153, 0.12), transparent 30%),
+        var(--bg);
+    }
+
+    button, input { font: inherit; }
+
+    .card {
+      width: min(100%, 560px);
+      overflow: hidden;
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      animation: cardIn 0.45s ease both;
+    }
+
+    .header {
+      padding: 28px 28px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    h1 {
+      margin: 0 0 5px;
+      font-size: clamp(24px, 5vw, 30px);
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .progress-ring {
+      width: 48px;
+      height: 48px;
+      flex: 0 0 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: conic-gradient(var(--accent) var(--progress, 0%), #ececf5 0);
+      position: relative;
+    }
+
+    .progress-ring::before {
+      content: "";
+      position: absolute;
+      inset: 5px;
+      background: var(--card);
+      border-radius: inherit;
+    }
+
+    .progress-ring span {
+      position: relative;
+      z-index: 1;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .content { padding: 0 28px 28px; }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      margin: 6px 0 18px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      min-width: 0;
+      padding: 13px 14px;
+      color: var(--text);
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s, transform .2s;
+    }
+
+    input[type="text"]::placeholder { color: #a3a6b1; }
+
+    input[type="text"]:focus {
+      border-color: rgba(124, 58, 237, .65);
+      box-shadow: 0 0 0 4px rgba(124, 58, 237, .12);
+    }
+
+    .add-btn {
+      border: 0;
+      border-radius: 12px;
+      padding: 0 19px;
+      color: #fff;
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .18s, background .18s, box-shadow .18s;
+      box-shadow: 0 8px 20px rgba(124, 58, 237, .28);
+    }
+
+    .add-btn:hover {
+      background: linear-gradient(135deg, #6d28d9, #4338ca);
+      transform: translateY(-1px);
+    }
+
+    .add-btn:active { transform: translateY(0); }
+
+    .task-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-height: 52px;
+      padding: 9px 10px 9px 12px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      transition: border-color .2s, transform .2s, box-shadow .2s, opacity .2s;
+      animation: taskIn .25s ease both;
+    }
+
+    .task-item:hover {
+      border-color: #dcddeb;
+      transform: translateY(-1px);
+      box-shadow: 0 7px 20px rgba(31, 35, 55, .06);
+    }
+
+    .task-item.done { opacity: .72; }
+
+    .task-check {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      flex: 0 0 20px;
+      margin: 0;
+      border: 2px solid #c8cad5;
+      border-radius: 6px;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: .2s ease;
+    }
+
+    .task-check:checked {
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      border-color: var(--accent);
+    }
+
+    .task-check:checked::after {
+      content: "✓";
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .task-text {
+      flex: 1;
+      min-width: 0;
+      font-size: 14px;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+    }
+
+    .task-item.done .task-text {
+      color: #999ca8;
+      text-decoration: line-through;
+      text-decoration-thickness: 1.5px;
+    }
+
+    .del-btn {
+      width: 32px;
+      height: 32px;
+      flex: 0 0 32px;
+      border: 0;
+      border-radius: 9px;
+      color: #a3a6b1;
+      background: transparent;
+      font-size: 17px;
+      cursor: pointer;
+      transition: .18s;
+    }
+
+    .del-btn:hover {
+      color: var(--danger);
+      background: #fff1f3;
+    }
+
+    .empty {
+      padding: 34px 12px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      border: 1px dashed #dddfea;
+      border-radius: 14px;
+      background: rgba(255,255,255,.55);
+    }
+
+    .empty-icon {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 26px;
+    }
+
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 17px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .clear-btn {
+      border: 0;
+      padding: 7px 9px;
+      border-radius: 8px;
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      transition: .18s;
+    }
+
+    .clear-btn:hover:not(:disabled) {
+      color: var(--danger);
+      background: #fff1f3;
+    }
+
+    .clear-btn:disabled {
+      cursor: not-allowed;
+      opacity: .45;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      z-index: 10;
+      padding: 10px 14px;
+      color: #fff;
+      background: #171923;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.18);
+      font-size: 13px;
+      transform: translate(-50%, 20px);
+      opacity: 0;
+      pointer-events: none;
+      transition: .25s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+
+    .card {
+      position: relative;
+    }
+
+    .card::before {
+      content: "";
+      display: block;
+      height: 5px;
+      background: linear-gradient(90deg, #7c3aed, #2563eb, #06b6d4, #ec4899);
+    }
+
+    .header {
+      background: linear-gradient(135deg, rgba(124, 58, 237, .08), rgba(37, 99, 235, .04));
+    }
+
+    .progress-ring {
+      background: conic-gradient(#7c3aed var(--progress, 0%), #e4e7f2 0);
+    }
+
+    .task-item:nth-child(4n + 1) {
+      border-left: 4px solid #7c3aed;
+    }
+
+    .task-item:nth-child(4n + 2) {
+      border-left: 4px solid #2563eb;
+    }
+
+    .task-item:nth-child(4n + 3) {
+      border-left: 4px solid #06b6d4;
+    }
+
+    .task-item:nth-child(4n) {
+      border-left: 4px solid #ec4899;
+    }
+
+    .task-item:hover {
+      background: linear-gradient(90deg, #ffffff, #f8f7ff);
+    }
+
+    .task-check:checked {
+      background: linear-gradient(135deg, #7c3aed, #2563eb);
+      border-color: #6d28d9;
+    }
+
+    .empty {
+      background: linear-gradient(135deg, #faf5ff, #eff6ff);
+      border-color: #d8d4fe;
+    }
+
+    .subtitle {
+      color: #636b7f;
+    }
+
+    .footer {
+      padding-top: 4px;
+    }
+
+    .count-badge {
+      color: #6d28d9;
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes taskIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 520px) {
+      body { padding: 20px 12px; }
+      .header, .content { padding-left: 18px; padding-right: 18px; }
+      .input-row { flex-direction: column; }
+      .add-btn { min-height: 46px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <main class="card">
+    <header class="header">
+      <div>
+        <h1>Daily To-Do</h1>
+        <p class="subtitle" id="todayDate"></p>
+      </div>
+      <div class="progress-ring" aria-label="Task completion">
+        <span>0%</span>
+      </div>
+    </header>
+
+    <section class="content">
+      <div class="input-row">
+        <input
+          type="text"
+          id="taskInput"
+          maxlength="200"
+          placeholder="What needs to be done?"
+          autocomplete="off"
+          autofocus
+          aria-label="New task"
+        >
+        <button class="add-btn" type="button" onclick="addTask()">Add Task</button>
+      </div>
+
+      <ul id="taskList" class="task-list" aria-live="polite"></ul>
+
+      <div class="empty" id="emptyMsg" hidden>
+        <span class="empty-icon">✓</span>
+        <strong>You're all caught up!</strong><br>
+        Add a task above to get started.
+      </div>
+
+      <footer class="footer">
+        <span id="countMsg" class="count-badge">No tasks yet</span>
+        <button class="clear-btn" type="button" onclick="clearCompleted()" disabled>
+          Clear completed
+        </button>
+      </footer>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
