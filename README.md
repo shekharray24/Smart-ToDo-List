@@ -1,35 +1,35 @@
-# 📝 Daily To-Do List
+# Daily To-Do List
 
 A modern, colorful and responsive **Daily To-Do List** built with **HTML, CSS and JavaScript**.
 
 The app lets users add, complete, delete and clear tasks. Tasks are automatically stored in the browser using **LocalStorage**, so they remain available after refreshing the page.
 
-## ✨ Features
+## Features
 
-- ➕ Add tasks
-- ✅ Mark tasks as completed
-- 🗑️ Delete individual tasks
-- 🧹 Clear completed tasks
-- 💾 LocalStorage persistence
-- 📊 Completion percentage
-- 📅 Current date display
-- 🔔 Toast notifications
-- 🎨 Purple, blue, cyan and pink color theme
-- 🌈 Gradient background
-- ✨ Smooth animations and hover effects
-- 📱 Responsive mobile layout
-- ⌨️ Press Enter to add a task
-- ♿ Basic accessibility support
-- 🛡️ Safe handling of invalid LocalStorage data
+-  Add tasks
+-  Mark tasks as completed
+-  Delete individual tasks
+-  Clear completed tasks
+-  LocalStorage persistence
+-  Completion percentage
+-  Current date display
+-  Toast notifications
+-  Purple, blue, cyan and pink color theme
+-  Gradient background
+-  Smooth animations and hover effects
+-  Responsive mobile layout
+-  Press Enter to add a task
+-  Basic accessibility support
+-  Safe handling of invalid LocalStorage data
 
-## 🛠️ Technologies
+## Technologies
 
 - **HTML5** — page structure
 - **CSS3** — colors, gradients, responsive layout and animations
 - **JavaScript (ES6+)** — application logic
 - **LocalStorage API** — browser-based task persistence
 
-## 📂 Project Structure
+##  Project Structure
 
 ```text
 Daily-To-Do-List/
@@ -42,7 +42,7 @@ Daily-To-Do-List/
 
 > The current version contains the CSS inside `index.html`. You can move the `<style>` section into `style.css` later if you want a completely separated HTML/CSS/JS structure.
 
-## 🚀 How to Run
+## How to Run
 
 No installation is required.
 
@@ -57,7 +57,7 @@ Open `index.html` in Chrome, Edge, Firefox or another modern browser.
 3. Right-click `index.html`.
 4. Select **Open with Live Server**.
 
-## 🧠 How JavaScript Works
+## How JavaScript Works
 
 The main JavaScript file is:
 
@@ -123,7 +123,7 @@ dailyTodoTasks
 - Empty-state message
 - Delete buttons
 
-## 💾 LocalStorage Example
+## LocalStorage Example
 
 The browser stores data similar to:
 
@@ -142,7 +142,7 @@ The browser stores data similar to:
 
 No database or backend is required.
 
-## 🎨 UI
+## UI
 
 The design uses:
 
@@ -155,25 +155,25 @@ The design uses:
 - Animated progress ring
 - Responsive layout
 
-## 🔮 Future Improvements
+## Future Improvements
 
 Possible additions:
 
-- 🌙 Dark mode
-- 🔍 Search and filter
-- 🏷️ Categories
-- ⭐ Priority levels
-- 📅 Due dates
-- ⏰ Reminders
-- ✏️ Edit tasks
-- 🔄 Drag-and-drop ordering
-- 📈 Productivity statistics
-- ☁️ Cloud synchronization
-- 👤 User authentication
-- 📱 PWA support
+-  Dark mode
+-  Search and filter
+-  Categories
+-  Priority levels
+-  Due dates
+-  Reminders
+-  Edit tasks
+-  Drag-and-drop ordering
+-  Productivity statistics
+-  Cloud synchronization
+-  User authentication
+-  PWA support
 
-## 👨‍💻 Author
+##  Author
 
-**Shekhar Kumar Ray**
+**Shekhar Ray**
 
 Built with ❤️ using **HTML + CSS + JavaScript**.
